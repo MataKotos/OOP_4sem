@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск частоты слова</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2em;
+            max-width: 600px;
+            margin: auto;
+        }
+        input, button {
+            padding: 0.5em;
+            font-size: 1em;
+        }
+        #result {
+            margin-top: 1em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>Найти частоту слова</h1>
+<form id="wordForm">
+    <label for="word">Введите слово:</label><br>
+    <input type="text" id="word" name="word" required />
+    <button type="submit">Найти</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+    document.getElementById('wordForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const word = document.getElementById('word').value;
+
+        fetch('/word-frequency?word=' + encodeURIComponent(word))
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Server returned error: " + response.status);
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('result').innerText = data;
+            })
+            .catch(error => {
+                document.getElementById('result').innerText = "Error: " + error.message;
+            });
+    });
+</script>
+</body>
+</html>
